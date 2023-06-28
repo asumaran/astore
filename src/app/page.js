@@ -43,35 +43,77 @@ async function addProductToCart(product, cartToken) {
   return await response.json();
 }
 
+function Currency({ amount, code = "USD" }) {
+  const formatter = new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: code,
+    maximumFractionDigits: 2,
+  });
+  return <span>{formatter.format(amount / 100)}</span>;
+}
+
 const StoreContext = createContext(null);
 
 function ProductItem(props) {
   const { product } = props;
-  const { cartToken } = useContext(StoreContext);
+  const { cartToken, setCart } = useContext(StoreContext);
 
   async function handleClick() {
-    await addProductToCart(product, cartToken);
+    const cart = await addProductToCart(product, cartToken);
+
+    setCart(cart);
   }
 
   return (
-    <div>
-      <div>
-        [{product.id}] - {product.name}
-      </div>
-      <div>
-        <img width="100" src={product.images[0]?.src} />
-      </div>
-      <div>
+    <div className={styles.product}>
+      <div className={styles.id}>{product.id}</div>
+      <div className={styles.details}>
+        <div className={styles.content}>
+          <div>
+            <img width="100" src={product.images[0]?.src} />
+          </div>
+          <div className={styles.name}>{product.name}</div>
+          <div className={styles.price}>
+            <Currency amount={product.prices.price} />
+          </div>
+        </div>
         {product.is_purchasable && (
-          <button onClick={handleClick}>Add to Cart</button>
+          <div className={styles.addToCart}>
+            <button onClick={handleClick}>Add to Cart</button>
+          </div>
         )}
       </div>
     </div>
   );
 }
 
+function CartItem({ item }) {
+  return (
+    <div className={styles.cartItem}>
+      <div className={styles.image}>
+        <img width="30" src={item.images[0]?.src} />
+      </div>
+      <div className={styles.id}>ID: {item.id}</div>
+      <div className={styles.name}>{item.name}</div>
+      <div className={styles.qty}>x{item.quantity}</div>
+      <div className={styles.price}>
+        <Currency amount={item.prices.price} />
+      </div>
+      <div className={styles.salePrice}>
+        <Currency amount={item.prices.sale_price} />
+      </div>
+      <div className={styles.lineSubTotal}>
+        <Currency amount={item.totals.line_subtotal} />
+      </div>
+      <div className={styles.lineTotal}>
+        <Currency amount={item.totals.line_total} />
+      </div>
+    </div>
+  );
+}
+
 function Main() {
-  const { setCart, cartToken, setCartToken } = useContext(StoreContext);
+  const { cart, setCart, cartToken, setCartToken } = useContext(StoreContext);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -81,7 +123,8 @@ function Main() {
     })();
 
     (async () => {
-      const { cartToken } = await getCart();
+      const { cartToken, cart } = await getCart();
+      setCart(cart);
       setCartToken(cartToken);
     })();
 
@@ -106,6 +149,30 @@ function Main() {
           );
         })}
       </ul>
+      <h1>Cart</h1>
+      <ul className={styles.cart}>
+        {cart?.items?.map((item) => (
+          <li key={item.key}>
+            <CartItem item={item} />
+          </li>
+        ))}
+      </ul>
+      <div className="totals">
+        <h2>Totals</h2>
+        <div>
+          Total items: <Currency amount={cart.totals?.total_items} />
+        </div>
+        <div>
+          Total Shipping: <Currency amount={cart.totals?.total_shipping} />
+        </div>
+        <div>
+          Total price: <Currency amount={cart.totals?.total_price} />
+        </div>
+        <div>
+          <button>Order now</button>
+        </div>
+      </div>
+      <hr />
       <div>
         <button onClick={onClickGetCartHandler}>Get Cart</button>
       </div>
