@@ -3,33 +3,38 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import styles from "./page.module.scss";
 
-async function getCart() {
-  const response = await fetch("http://wcpay.test/wp-json/wc/store/v1/cart");
-  const nonce = response.headers.get("nonce");
+async function getCart(cartToken) {
+  const headers = {};
+
+  if (cartToken) {
+    headers["Cart-Token"] = cartToken;
+  }
+
+  const response = await fetch("http://wcpay.test/wp-json/wc/store/v1/cart", {
+    headers,
+  });
+
+  const cartTokenFromResponse = response.headers.get("Cart-Token");
   const cart = await response.json();
-  return { nonce, cart };
+
+  return { cart, cartToken: cartTokenFromResponse };
 }
 
 async function getProducts() {
   const response = await fetch(
-    "http://wcpay.test/wp-json/wc/store/v1/products",
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
+    "http://wcpay.test/wp-json/wc/store/v1/products"
   );
   return await response.json();
 }
 
-async function addProductToCart(product, nonce) {
+async function addProductToCart(product, cartToken) {
   const response = await fetch(
     "http://wcpay.test/wp-json/wc/store/v1/cart/add-item",
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Nonce: nonce,
+        "Cart-Token": cartToken,
       },
       body: JSON.stringify({ id: product.id, quantity: 1 }),
     }
@@ -42,10 +47,10 @@ const StoreContext = createContext(null);
 
 function ProductItem(props) {
   const { product } = props;
-  const { storeData } = useContext(StoreContext);
+  const { cartToken } = useContext(StoreContext);
 
   async function handleClick() {
-    await addProductToCart(product, storeData.nonce);
+    await addProductToCart(product, cartToken);
   }
 
   return (
@@ -57,14 +62,16 @@ function ProductItem(props) {
         <img width="100" src={product.images[0]?.src} />
       </div>
       <div>
-        <button onClick={handleClick}>Add to Cart</button>
+        {product.is_purchasable && (
+          <button onClick={handleClick}>Add to Cart</button>
+        )}
       </div>
     </div>
   );
 }
 
 function Main() {
-  const { storeData, setStoreData } = useContext(StoreContext);
+  const { setCart, cartToken, setCartToken } = useContext(StoreContext);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -73,16 +80,18 @@ function Main() {
       setProducts(data);
     })();
 
+    (async () => {
+      const { cartToken } = await getCart();
+      setCartToken(cartToken);
+    })();
+
     return () => {};
   }, []);
 
   async function onClickGetCartHandler() {
-    const { nonce, cart } = await getCart();
+    const { cart } = await getCart(cartToken);
 
-    const newStoreData = storeData;
-    newStoreData.nonce = nonce;
-
-    setStoreData(newStoreData);
+    setCart(cart);
   }
 
   return (
@@ -105,11 +114,12 @@ function Main() {
 }
 
 export default function Home() {
-  const [storeData, setStoreData] = useState({});
+  const [cart, setCart] = useState({});
+  const [cartToken, setCartToken] = useState(null);
 
   // we could memoize the value
   return (
-    <StoreContext.Provider value={{ storeData, setStoreData }}>
+    <StoreContext.Provider value={{ cart, setCart, cartToken, setCartToken }}>
       <Main />
     </StoreContext.Provider>
   );
