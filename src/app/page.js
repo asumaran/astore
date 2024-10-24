@@ -141,13 +141,15 @@ function Main() {
     <div>
       <h1>Products</h1>
       <ul className={styles.products}>
-        {products.map((product) => {
-          return (
-            <li key={product.id}>
-              <ProductItem product={product} />
-            </li>
-          );
-        })}
+        {products
+          .filter((i) => i.is_purchasable)
+          .map((product) => {
+            return (
+              <li key={product.id}>
+                <ProductItem product={product} />
+              </li>
+            );
+          })}
       </ul>
       <h1>Cart</h1>
       <ul className={styles.cart}>
