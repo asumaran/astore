@@ -33,15 +33,11 @@
   }
 
   .details {
-    // background-color: green;
-    height: 200px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 
     .content {
-      // background-color: yellow;
-
       .name {
         font-size: 14px;
         padding-bottom: 10px;
@@ -62,7 +58,6 @@
     }
 
     .addToCart {
-      // background-color: yellow;
       text-align: center;
     }
   }
@@ -88,12 +83,6 @@
     display: inline-block;
     vertical-align: middle;
     margin-left: 10px;
-  }
-
-  .image {
-  }
-
-  .id {
   }
 
   .name {
