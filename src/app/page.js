@@ -178,6 +178,11 @@ function Main() {
       <div>
         <button onClick={onClickGetCartHandler}>Get Cart</button>
       </div>
+      <hr />
+      <code>
+        Debug: <br />
+        Cart Token: {cartToken}
+      </code>
     </div>
   );
 }
