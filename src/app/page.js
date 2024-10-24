@@ -40,7 +40,10 @@ async function addProductToCart(product, cartToken) {
     }
   );
 
-  return await response.json();
+  const cartTokenFromResponse = response.headers.get("Cart-Token");
+  const cart = await response.json();
+
+  return { cart, cartToken: cartTokenFromResponse };
 }
 
 function Currency({ amount, code = "USD" }) {
@@ -56,12 +59,16 @@ const StoreContext = createContext(null);
 
 function ProductItem(props) {
   const { product } = props;
-  const { cartToken, setCart } = useContext(StoreContext);
+  const { setCart, cartToken, setCartToken } = useContext(StoreContext);
 
   async function handleClick() {
-    const cart = await addProductToCart(product, cartToken);
+    const { cart, cartToken: cartTokenFromResponse } = await addProductToCart(
+      product,
+      cartToken
+    );
 
     setCart(cart);
+    setCartToken(cartTokenFromResponse);
   }
 
   return (
@@ -132,9 +139,10 @@ function Main() {
   }, []);
 
   async function onClickGetCartHandler() {
-    const { cart } = await getCart(cartToken);
+    const { cart, cartToken: cartTokenFromResponse } = await getCart(cartToken);
 
     setCart(cart);
+    setCartToken(cartTokenFromResponse);
   }
 
   return (
