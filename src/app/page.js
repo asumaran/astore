@@ -10,7 +10,7 @@ async function getCart(cartToken) {
     headers["Cart-Token"] = cartToken;
   }
 
-  const response = await fetch("http://wcpay.test/wp-json/wc/store/v1/cart", {
+  const response = await fetch("https://wcpay.test/wp-json/wc/store/v1/cart", {
     headers,
   });
 
@@ -22,14 +22,14 @@ async function getCart(cartToken) {
 
 async function getProducts() {
   const response = await fetch(
-    "http://wcpay.test/wp-json/wc/store/v1/products"
+    "https://wcpay.test/wp-json/wc/store/v1/products"
   );
   return await response.json();
 }
 
 async function addProductToCart(product, cartToken) {
   const response = await fetch(
-    "http://wcpay.test/wp-json/wc/store/v1/cart/add-item",
+    "https://wcpay.test/wp-json/wc/store/v1/cart/add-item",
     {
       method: "POST",
       headers: {
