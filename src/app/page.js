@@ -28,16 +28,25 @@ async function getProducts() {
   return await response.json();
 }
 
-async function addProductToCart(product, cartToken) {
+async function addProductToCart(productId) {
+  let storedCartToken = localStorage.getItem("cartToken");
+
+  if (!storedCartToken) {
+    const { cartToken } = await getCart();
+    // store Cart Token
+    storedCartToken = cartToken;
+    localStorage.setItem("cartToken", cartToken);
+  }
+
   const response = await fetch(
     "https://wcpay.test/wp-json/wc/store/v1/cart/add-item",
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Cart-Token": cartToken,
+        "Cart-Token": storedCartToken,
       },
-      body: JSON.stringify({ id: product.id, quantity: 1 }),
+      body: JSON.stringify({ id: productId, quantity: 1 }),
     }
   );
 
@@ -59,17 +68,10 @@ function Currency({ amount, code = "USD" }) {
 const StoreContext = createContext(null);
 
 function ProductItem(props) {
-  const { product } = props;
-  const { setCart, cartToken, setCartToken } = useContext(StoreContext);
+  const { product, addProductToCart } = props;
 
-  async function handleClick() {
-    const { cart, cartToken: cartTokenFromResponse } = await addProductToCart(
-      product,
-      cartToken
-    );
-
-    setCart(cart);
-    setCartToken(cartTokenFromResponse);
+  function handleClick() {
+    addProductToCart(product.id);
   }
 
   return (
@@ -130,18 +132,25 @@ function Main() {
       setProducts(data);
     })();
 
+    // if there's a token then get it.
     (async () => {
-      const { cartToken, cart } = await getCart();
+      const { cart, cartToken: cartTokenFromResponse } = await getCart(
+        cartToken
+      );
       setCart(cart);
-      setCartToken(cartToken);
+      setCartToken(cartTokenFromResponse);
     })();
 
     return () => {};
   }, []);
 
-  async function onClickGetCartHandler() {
-    const { cart, cartToken: cartTokenFromResponse } = await getCart(cartToken);
+  async function addProductToCartHandler(productId) {
+    const { cart, cartToken: cartTokenFromResponse } = await addProductToCart(
+      productId,
+      cartToken
+    );
 
+    // guardar cart y cart token token
     setCart(cart);
     setCartToken(cartTokenFromResponse);
   }
@@ -155,7 +164,10 @@ function Main() {
           .map((product) => {
             return (
               <li key={product.id}>
-                <ProductItem product={product} />
+                <ProductItem
+                  product={product}
+                  addProductToCart={addProductToCartHandler}
+                />
               </li>
             );
           })}
@@ -164,7 +176,7 @@ function Main() {
       <ul className={styles.cart}>
         {cart?.items?.map((item) => (
           <li key={item.key}>
-            <CartItem item={item} />
+            <CartItem item={item} addProductToCart={addProductToCart} />
           </li>
         ))}
       </ul>
@@ -185,7 +197,6 @@ function Main() {
       </div>
       <hr />
       <div>
-        <button onClick={onClickGetCartHandler}>Get Cart</button>
         <Link href="/checkout">Go to Checkout</Link>
       </div>
       <hr />
@@ -199,7 +210,7 @@ function Main() {
 
 export default function Home() {
   const [cart, setCart] = useState({});
-  const [cartToken, setCartToken] = useState(null);
+  const [cartToken, setCartToken] = useState(localStorage.getItem("cartToken"));
 
   // we could memoize the value
   return (
