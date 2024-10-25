@@ -133,16 +133,17 @@ function Main() {
     })();
 
     // if there's a token then get it.
-    (async () => {
-      const { cart, cartToken: cartTokenFromResponse } = await getCart(
-        cartToken
-      );
-      setCart(cart);
-      setCartToken(cartTokenFromResponse);
-    })();
-
+    if (cartToken) {
+      (async () => {
+        const { cart, cartToken: cartTokenFromResponse } = await getCart(
+          cartToken
+        );
+        setCart(cart);
+        setCartToken(cartTokenFromResponse);
+      })();
+    }
     return () => {};
-  }, []);
+  }, [cartToken, setCart, setCartToken]);
 
   async function addProductToCartHandler(productId) {
     const { cart, cartToken: cartTokenFromResponse } = await addProductToCart(
