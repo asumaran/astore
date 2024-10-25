@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import styles from "./page.module.scss";
+import Link from "next/link";
 
 async function getCart(cartToken) {
   const headers = {};
@@ -185,6 +186,7 @@ function Main() {
       <hr />
       <div>
         <button onClick={onClickGetCartHandler}>Get Cart</button>
+        <Link href="/checkout">Go to Checkout</Link>
       </div>
       <hr />
       <code>
