@@ -79,7 +79,7 @@ function ProductItem(props) {
       <div className={styles.details}>
         <div className={styles.content}>
           <div>
-            <img width="100" src={product.images[0]?.src} />
+            <img alt="Product Image" width="100" src={product.images[0]?.src} />
           </div>
           <div className={styles.name}>{product.name}</div>
           <div className={styles.price}>
@@ -100,7 +100,7 @@ function CartItem({ item }) {
   return (
     <div className={styles.cartItem}>
       <div className={styles.image}>
-        <img width="30" src={item.images[0]?.src} />
+        <img alt="Product Image" width="30" src={item.images[0]?.src} />
       </div>
       <div className={styles.id}>ID: {item.id}</div>
       <div className={styles.name}>{item.name}</div>
