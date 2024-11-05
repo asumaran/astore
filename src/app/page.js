@@ -1,8 +1,9 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from "./page.module.scss";
 import Link from "next/link";
+import { AppContext } from "./app-provider";
 
 async function getCart(cartToken) {
   const headers = {};
@@ -65,8 +66,6 @@ function Currency({ amount, code = "USD" }) {
   return <span>{formatter.format(amount / 100)}</span>;
 }
 
-const StoreContext = createContext(null);
-
 function ProductItem(props) {
   const { product, addProductToCart } = props;
 
@@ -122,8 +121,8 @@ function CartItem({ item }) {
   );
 }
 
-function Main() {
-  const { cart, setCart, cartToken, setCartToken } = useContext(StoreContext);
+export default function Home() {
+  const { cart, setCart, cartToken, setCartToken } = useContext(AppContext);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -213,17 +212,5 @@ function Main() {
         Cart Token: {cartToken}
       </code>
     </div>
-  );
-}
-
-export default function Home() {
-  const [cart, setCart] = useState({});
-  const [cartToken, setCartToken] = useState(localStorage.getItem("cartToken"));
-
-  // we could memoize the value
-  return (
-    <StoreContext.Provider value={{ cart, setCart, cartToken, setCartToken }}>
-      <Main />
-    </StoreContext.Provider>
   );
 }
