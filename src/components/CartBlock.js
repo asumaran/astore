@@ -1,3 +1,7 @@
+import CartItem from "./CartItem";
+import Currency from "./Currency";
+import styles from "../app/page.module.scss";
+
 export default function CartBlock({ cart }) {
   return (
     <div>
@@ -7,7 +11,7 @@ export default function CartBlock({ cart }) {
           <ul className={styles.cart}>
             {cart.items?.map((item) => (
               <li key={item.key}>
-                <CartItem item={item} addProductToCart={addProductToCart} />
+                <CartItem item={item} />
               </li>
             ))}
           </ul>

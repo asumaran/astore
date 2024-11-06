@@ -7,6 +7,7 @@ import { AppContext } from "./app-provider";
 import CartBlock from "@/components/CartBlock";
 import Navigation from "@/components/Navigation";
 import Debug from "@/components/Debug";
+import Currency from "@/components/Currency";
 
 async function getCart(cartToken) {
   const headers = {};
@@ -60,15 +61,6 @@ async function addProductToCart(productId) {
   return { cart, cartToken: cartTokenFromResponse };
 }
 
-function Currency({ amount, code = "USD" }) {
-  const formatter = new Intl.NumberFormat(undefined, {
-    style: "currency",
-    currency: code,
-    maximumFractionDigits: 2,
-  });
-  return <span>{formatter.format(amount / 100)}</span>;
-}
-
 function ProductItem(props) {
   const { product, addProductToCart } = props;
 
@@ -94,31 +86,6 @@ function ProductItem(props) {
             <button onClick={handleClick}>Add to Cart</button>
           </div>
         )}
-      </div>
-    </div>
-  );
-}
-
-function CartItem({ item }) {
-  return (
-    <div className={styles.cartItem}>
-      <div className={styles.image}>
-        <img alt="Product Image" width="30" src={item.images[0]?.src} />
-      </div>
-      <div className={styles.id}>ID: {item.id}</div>
-      <div className={styles.name}>{item.name}</div>
-      <div className={styles.qty}>x{item.quantity}</div>
-      <div className={styles.price}>
-        <Currency amount={item.prices.price} />
-      </div>
-      <div className={styles.salePrice}>
-        <Currency amount={item.prices.sale_price} />
-      </div>
-      <div className={styles.lineSubTotal}>
-        <Currency amount={item.totals.line_subtotal} />
-      </div>
-      <div className={styles.lineTotal}>
-        <Currency amount={item.totals.line_total} />
       </div>
     </div>
   );
