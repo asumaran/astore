@@ -5,6 +5,7 @@ import styles from "./page.module.scss";
 import Link from "next/link";
 import { AppContext } from "./app-provider";
 import CartBlock from "@/components/CartBlock";
+import Navigation from "@/components/Navigation";
 
 async function getCart(cartToken) {
   const headers = {};
@@ -151,13 +152,14 @@ export default function Home() {
       cartToken
     );
 
-    // guardar cart y cart token token
+    // Update cart and Cart Token
     setCart(cart);
     setCartToken(cartTokenFromResponse);
   }
 
   return (
     <div>
+      <Navigation />
       <h1>Products</h1>
       <ul className={styles.products}>
         {products
@@ -174,10 +176,6 @@ export default function Home() {
           })}
       </ul>
       <CartBlock cart={cart} />
-      <hr />
-      <div>
-        <Link href="/checkout">Go to Checkout</Link>
-      </div>
       <hr />
       <code>
         Debug: <br />
