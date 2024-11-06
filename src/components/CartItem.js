@@ -32,7 +32,7 @@ async function removeItemFromCart(itemKey) {
 }
 
 export default function CartItem({ item }) {
-  const { cart, setCart, cartToken, setCartToken } = useContext(AppContext);
+  const { setCart, setCartToken } = useContext(AppContext);
 
   async function onRemoveItemClickHandler() {
     const { cart, cartToken: cartTokenFromResponse } = await removeItemFromCart(
