@@ -1,12 +1,16 @@
 "use client";
 
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 export const AppContext = createContext(null);
 
 export default function AppProvider({ children }) {
   const [cart, setCart] = useState({});
-  const [cartToken, setCartToken] = useState(localStorage.getItem("cartToken"));
+  const [cartToken, setCartToken] = useState(null);
+
+  useEffect(() => {
+    setCartToken(localStorage.getItem("cartToken"));
+  }, []);
 
   return (
     <AppContext.Provider value={{ cart, setCart, cartToken, setCartToken }}>
