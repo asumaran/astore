@@ -2,12 +2,11 @@
 
 import { useContext, useEffect, useState } from 'react';
 import styles from './page.module.scss';
-import Link from 'next/link';
 import { AppContext, getCart } from './app-provider';
 import CartBlock from '@/components/CartBlock';
 import Navigation from '@/components/Navigation';
 import Debug from '@/components/Debug';
-import Currency from '@/components/Currency';
+import ProductItem from '@/components/ProductItem';
 
 async function getProducts() {
   const response = await fetch(
@@ -42,36 +41,6 @@ async function addProductToCart(productId) {
   const cart = await response.json();
 
   return { cart, cartToken: cartTokenFromResponse };
-}
-
-function ProductItem(props) {
-  const { product, addProductToCart } = props;
-
-  function handleClick() {
-    addProductToCart(product.id);
-  }
-
-  return (
-    <div className={styles.product}>
-      <div className={styles.id}>{product.id}</div>
-      <div className={styles.details}>
-        <div className={styles.content}>
-          <div>
-            <img alt='Product Image' width='100' src={product.images[0]?.src} />
-          </div>
-          <div className={styles.name}>{product.name}</div>
-          <div className={styles.price}>
-            <Currency amount={product.prices.price} />
-          </div>
-        </div>
-        {product.is_purchasable && (
-          <div className={styles.addToCart}>
-            <button onClick={handleClick}>Add to Cart</button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
 }
 
 export default function Home() {
