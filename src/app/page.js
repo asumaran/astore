@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import styles from "./page.module.scss";
 import Link from "next/link";
 import { AppContext } from "./app-provider";
+import CartBlock from "@/components/CartBlock";
 
 async function getCart(cartToken) {
   const headers = {};
@@ -172,36 +173,7 @@ export default function Home() {
             );
           })}
       </ul>
-      <h1>Cart</h1>
-      {Object.keys(cart).length ? (
-        <div>
-          <ul className={styles.cart}>
-            {cart?.items?.map((item) => (
-              <li key={item.key}>
-                <CartItem item={item} addProductToCart={addProductToCart} />
-              </li>
-            ))}
-          </ul>
-          <div className="totals">
-            <h2>Totals</h2>
-            <div>
-              Total items: <Currency amount={cart.totals?.total_items} />
-            </div>
-            <div>
-              Total Shipping: <Currency amount={cart.totals?.total_shipping} />
-            </div>
-            <div>
-              Total price: <Currency amount={cart.totals?.total_price} />
-            </div>
-            <div>
-              <button>Order now</button>
-            </div>
-          </div>
-        </div>
-      ) : (
-        "Empty Cart"
-      )}
-
+      <CartBlock cart={cart} />
       <hr />
       <div>
         <Link href="/checkout">Go to Checkout</Link>
