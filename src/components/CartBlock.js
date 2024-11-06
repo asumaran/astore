@@ -26,9 +26,6 @@ export default function CartBlock({ cart }) {
             <div>
               Total price: <Currency amount={cart.totals?.total_price} />
             </div>
-            <div>
-              <button>Order now</button>
-            </div>
           </div>
         </div>
       ) : (
