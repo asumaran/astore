@@ -6,7 +6,7 @@ export default function CartBlock({ cart }) {
   return (
     <div>
       <h2>Cart</h2>
-      {Object.keys(cart).length ? (
+      {Object.keys(cart).length && cart.items.length > 0 ? (
         <div>
           <ul className={styles.cart}>
             {cart.items?.map((item) => (
