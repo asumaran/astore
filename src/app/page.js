@@ -6,6 +6,7 @@ import Link from "next/link";
 import { AppContext } from "./app-provider";
 import CartBlock from "@/components/CartBlock";
 import Navigation from "@/components/Navigation";
+import Debug from "@/components/Debug";
 
 async function getCart(cartToken) {
   const headers = {};
@@ -177,10 +178,7 @@ export default function Home() {
       </ul>
       <CartBlock cart={cart} />
       <hr />
-      <code>
-        Debug: <br />
-        Cart Token: {cartToken}
-      </code>
+      <Debug cartToken={cartToken} />
     </div>
   );
 }
