@@ -1,61 +1,44 @@
-"use client";
+'use client';
 
-import { useContext, useEffect, useState } from "react";
-import styles from "./page.module.scss";
-import Link from "next/link";
-import { AppContext } from "./app-provider";
-import CartBlock from "@/components/CartBlock";
-import Navigation from "@/components/Navigation";
-import Debug from "@/components/Debug";
-import Currency from "@/components/Currency";
-
-async function getCart(cartToken) {
-  const headers = {};
-
-  if (cartToken) {
-    headers["Cart-Token"] = cartToken;
-  }
-
-  const response = await fetch("https://wcpay.test/wp-json/wc/store/v1/cart", {
-    headers,
-  });
-
-  const cartTokenFromResponse = response.headers.get("Cart-Token");
-  const cart = await response.json();
-
-  return { cart, cartToken: cartTokenFromResponse };
-}
+import { useContext, useEffect, useState } from 'react';
+import styles from './page.module.scss';
+import Link from 'next/link';
+import { AppContext, getCart } from './app-provider';
+import CartBlock from '@/components/CartBlock';
+import Navigation from '@/components/Navigation';
+import Debug from '@/components/Debug';
+import Currency from '@/components/Currency';
 
 async function getProducts() {
   const response = await fetch(
-    "https://wcpay.test/wp-json/wc/store/v1/products"
+    'https://wcpay.test/wp-json/wc/store/v1/products'
   );
   return await response.json();
 }
 
 async function addProductToCart(productId) {
-  let storedCartToken = localStorage.getItem("cartToken");
+  let storedCartToken = localStorage.getItem('cartToken');
 
   if (!storedCartToken) {
     const { cartToken } = await getCart();
     // store Cart Token
     storedCartToken = cartToken;
-    localStorage.setItem("cartToken", cartToken);
+    localStorage.setItem('cartToken', cartToken);
   }
 
   const response = await fetch(
-    "https://wcpay.test/wp-json/wc/store/v1/cart/add-item",
+    'https://wcpay.test/wp-json/wc/store/v1/cart/add-item',
     {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        "Cart-Token": storedCartToken,
+        'Content-Type': 'application/json',
+        'Cart-Token': storedCartToken,
       },
       body: JSON.stringify({ id: productId, quantity: 1 }),
     }
   );
 
-  const cartTokenFromResponse = response.headers.get("Cart-Token");
+  const cartTokenFromResponse = response.headers.get('Cart-Token');
   const cart = await response.json();
 
   return { cart, cartToken: cartTokenFromResponse };
@@ -74,7 +57,7 @@ function ProductItem(props) {
       <div className={styles.details}>
         <div className={styles.content}>
           <div>
-            <img alt="Product Image" width="100" src={product.images[0]?.src} />
+            <img alt='Product Image' width='100' src={product.images[0]?.src} />
           </div>
           <div className={styles.name}>{product.name}</div>
           <div className={styles.price}>
@@ -100,19 +83,7 @@ export default function Home() {
       const data = await getProducts();
       setProducts(data);
     })();
-
-    // if there's a token then get it.
-    if (cartToken) {
-      (async () => {
-        const { cart, cartToken: cartTokenFromResponse } = await getCart(
-          cartToken
-        );
-        setCart(cart);
-        setCartToken(cartTokenFromResponse);
-      })();
-    }
-    return () => {};
-  }, [cartToken, setCart, setCartToken]);
+  }, []);
 
   async function addProductToCartHandler(productId) {
     const { cart, cartToken: cartTokenFromResponse } = await addProductToCart(
