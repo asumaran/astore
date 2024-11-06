@@ -1,3 +1,6 @@
+@import url('simpledotcss/simple.min.css');
+
 body {
   font-family: sans-serif;
+  font-size: 0.9rem;
 }
