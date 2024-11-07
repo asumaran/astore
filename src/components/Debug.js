@@ -1,3 +1,5 @@
+'use client';
+
 import { AppContext } from '@/app/app-provider';
 import { useContext } from 'react';
 

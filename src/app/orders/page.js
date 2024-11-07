@@ -1,26 +1,15 @@
 'use client';
 
 import Debug from '@/components/Debug';
-import Navigation from '@/components/Navigation';
 import { AppContext } from '../app-provider';
 import { useContext } from 'react';
+import Link from 'next/link';
 
-export default function Orders() {
+export default function Orders({ children }) {
   const { orders } = useContext(AppContext);
   return (
     <div>
-      <Navigation />
-      <h1>Orders</h1>
-      <ul>
-        {orders.map((order) => (
-          <li key='order.orderId'>
-            <div>
-              <a href='#'>Order: #{order.orderId}</a>
-            </div>
-          </li>
-        ))}
-      </ul>
-      <Debug />
+      <div>{children}</div>
     </div>
   );
 }
