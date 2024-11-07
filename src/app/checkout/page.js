@@ -5,6 +5,7 @@ import { AppContext } from '../app-provider';
 import CartBlock from '@/components/CartBlock';
 import Navigation from '@/components/Navigation';
 import Debug from '@/components/Debug';
+import { useRouter } from 'next/navigation';
 
 async function doCheckout() {
   let cartToken = localStorage.getItem('cartToken');
@@ -82,13 +83,11 @@ function storeOrderParams(orderId, orderKey, email) {
 }
 
 export default function Checkout() {
-  const { cart, cartToken, setCartToken } = useContext(AppContext);
+  const { cart, setCart, setCartToken } = useContext(AppContext);
+  const router = useRouter();
 
   async function onCheckoutClickHandler() {
-    const { checkout, cartToken } = await doCheckout();
-
-    // TODO: Do we need to set the cart token anymore after checkout?
-    setCartToken(cartToken);
+    const { checkout } = await doCheckout();
 
     storeOrderParams(
       checkout.order_id,
@@ -96,8 +95,9 @@ export default function Checkout() {
       checkout.billing_address.email
     );
 
-    // TODO: Clear cart?
-    // TODO: Redirect to home page?
+    setCart(null);
+    setCartToken(null);
+    router.push('/');
   }
 
   async function getCheckoutDataOnClickHandler() {

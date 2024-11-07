@@ -1,12 +1,12 @@
-import CartItem from "./CartItem";
-import Currency from "./Currency";
-import styles from "../app/page.module.scss";
+import CartItem from './CartItem';
+import Currency from './Currency';
+import styles from '../app/page.module.scss';
 
 export default function CartBlock({ cart }) {
   return (
     <div>
       <h2>Cart</h2>
-      {Object.keys(cart).length && cart.items.length > 0 ? (
+      {cart && Object.keys(cart).length && cart.items.length > 0 ? (
         <div>
           <ul className={styles.cart}>
             {cart.items?.map((item) => (
@@ -15,7 +15,7 @@ export default function CartBlock({ cart }) {
               </li>
             ))}
           </ul>
-          <div className="totals">
+          <div className='totals'>
             <h2>Totals</h2>
             <div>
               Total items: <Currency amount={cart.totals?.total_items} />
@@ -29,7 +29,7 @@ export default function CartBlock({ cart }) {
           </div>
         </div>
       ) : (
-        "Empty Cart"
+        'Empty Cart'
       )}
     </div>
   );
