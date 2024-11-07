@@ -77,24 +77,27 @@ async function getCheckoutData() {
 function storeOrderParams(orderId, orderKey, email) {
   const orders = JSON.parse(localStorage.getItem('orders')) || [];
 
-  orders.push({ orderId, orderKey, email });
+  orders.unshift({ orderId, orderKey, email });
 
   localStorage.setItem('orders', JSON.stringify(orders));
+
+  return orders;
 }
 
 export default function Checkout() {
-  const { cart, setCart, setCartToken } = useContext(AppContext);
+  const { cart, setCart, setCartToken, setOrders } = useContext(AppContext);
   const router = useRouter();
 
   async function onCheckoutClickHandler() {
     const { checkout } = await doCheckout();
 
-    storeOrderParams(
+    const orders = storeOrderParams(
       checkout.order_id,
       checkout.order_key,
       checkout.billing_address.email
     );
 
+    setOrders(orders);
     setCart(null);
     setCartToken(null);
     router.push('/');

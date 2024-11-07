@@ -24,6 +24,7 @@ export async function getCart(cartToken) {
 export default function AppProvider({ children }) {
   const [cart, setCart] = useState(null);
   const [cartToken, setCartToken] = useState(null);
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     const storedCartToken = localStorage.getItem('cartToken');
@@ -38,11 +39,22 @@ export default function AppProvider({ children }) {
         setCartToken(cartTokenFromResponse);
       })();
     }
+
+    // get orders from localStorage
+    const storedOrders = localStorage.getItem('orders');
+
+    if (storedOrders) {
+      const orders = JSON.parse(storedOrders);
+      setOrders(orders);
+    }
+
     return () => {};
   }, []);
 
   return (
-    <AppContext.Provider value={{ cart, setCart, cartToken, setCartToken }}>
+    <AppContext.Provider
+      value={{ cart, setCart, cartToken, setCartToken, orders, setOrders }}
+    >
       {children}
     </AppContext.Provider>
   );
