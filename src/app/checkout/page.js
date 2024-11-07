@@ -47,30 +47,6 @@ async function doCheckout() {
   return { checkout: checkoutResponse, cartToken: cartTokenFromResponse };
 }
 
-async function getCheckoutData() {
-  let cartToken = localStorage.getItem('cartToken');
-
-  if (!cartToken) {
-    console.error('No Cart Token found');
-    return;
-  }
-
-  const response = await fetch(
-    'https://wcpay.test/wp-json/wc/store/v1/checkout',
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        'Cart-Token': cartToken,
-      },
-    }
-  );
-
-  const cartTokenFromResponse = response.headers.get('Cart-Token');
-  const checkoutData = await response.json();
-
-  return { checkoutData, cartToken: cartTokenFromResponse };
-}
-
 /**
  * Store order required params in the browser using localStorage.
  */
@@ -103,13 +79,6 @@ export default function Checkout() {
     router.push('/');
   }
 
-  async function getCheckoutDataOnClickHandler() {
-    const { checkoutData, cartToken } = await getCheckoutData();
-
-    console.log('Checkout Data', checkoutData);
-    setCartToken(cartToken);
-  }
-
   return (
     <div>
       <Navigation />
@@ -118,11 +87,6 @@ export default function Checkout() {
       <hr />
       <p>
         <button onClick={onCheckoutClickHandler}>Checkout</button>
-      </p>
-      <p>
-        <button onClick={getCheckoutDataOnClickHandler}>
-          Get Checkout Data
-        </button>
       </p>
       <hr />
       <Debug />
