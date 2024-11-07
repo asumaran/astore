@@ -22,7 +22,7 @@ export async function getCart(cartToken) {
 }
 
 export default function AppProvider({ children }) {
-  const [cart, setCart] = useState({});
+  const [cart, setCart] = useState(null);
   const [cartToken, setCartToken] = useState(null);
 
   useEffect(() => {

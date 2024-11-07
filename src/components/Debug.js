@@ -1,16 +1,16 @@
-import { AppContext } from "@/app/app-provider";
-import { useContext } from "react";
+import { AppContext } from '@/app/app-provider';
+import { useContext } from 'react';
 
-export default function Debug({ cartToken }) {
-  const { cart } = useContext(AppContext);
+export default function Debug() {
+  const { cart, cartToken } = useContext(AppContext);
 
   return (
     <div>
       Debug <br />
       <pre>
-        Cart Token: {cartToken ? cartToken : "No Cart Token"}
+        Cart Token: {cartToken ? cartToken : 'No Cart Token'}
         <br />
-        Cart: {cart ? JSON.stringify(cart, null, 2) : "No Cart"}
+        Cart: {cart ? JSON.stringify(cart, null, 2) : 'No Cart'}
       </pre>
     </div>
   );

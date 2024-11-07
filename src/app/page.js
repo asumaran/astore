@@ -85,7 +85,7 @@ export default function Home() {
       </ul>
       <CartBlock cart={cart} />
       <hr />
-      <Debug cartToken={cartToken} />
+      <Debug />
     </div>
   );
 }

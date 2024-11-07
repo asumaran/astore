@@ -122,7 +122,7 @@ export default function Checkout() {
         </button>
       </p>
       <hr />
-      <Debug cartToken={cartToken} />
+      <Debug />
     </div>
   );
 }
