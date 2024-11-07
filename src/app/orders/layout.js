@@ -15,12 +15,10 @@ export default function OrdersLayout({ children }) {
       <h1>Orders</h1>
       <ul>
         {orders.map((order) => (
-          <li key='order.orderId'>
-            <div>
-              <Link href={'/orders/' + order.orderId}>
-                Order #{order.orderId}
-              </Link>
-            </div>
+          <li key={order.orderId}>
+            <Link href={'/orders/' + order.orderId}>
+              Order #{order.orderId}
+            </Link>
           </li>
         ))}
       </ul>
