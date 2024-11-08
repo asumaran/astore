@@ -1,7 +1,6 @@
 'use client';
 
-import { AppContext } from '@/app/app-provider';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 async function getOrderDetails(orderId, orderKey, email) {
   const urlParams = new URLSearchParams();
