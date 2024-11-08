@@ -7,6 +7,8 @@ import CartBlock from '@/components/CartBlock';
 import Navigation from '@/components/Navigation';
 import Debug from '@/components/Debug';
 import ProductItem from '@/components/ProductItem';
+import { useRouter } from 'next/navigation';
+import { cartHasItems } from '@/utils';
 
 async function getProducts() {
   const response = await fetch(
@@ -46,6 +48,7 @@ async function addProductToCart(productId) {
 export default function Home() {
   const { cart, setCart, cartToken, setCartToken } = useContext(AppContext);
   const [products, setProducts] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     (async () => {
@@ -63,6 +66,10 @@ export default function Home() {
     // Update cart and Cart Token
     setCart(cart);
     setCartToken(cartTokenFromResponse);
+  }
+
+  function goToCheckoutClickHandler() {
+    router.push('/checkout');
   }
 
   return (
@@ -84,6 +91,11 @@ export default function Home() {
           })}
       </ul>
       <CartBlock cart={cart} />
+      {cartHasItems(cart) && (
+        <p>
+          <button onClick={goToCheckoutClickHandler}>Go to Checkout</button>
+        </p>
+      )}
       <hr />
       <Debug />
     </div>

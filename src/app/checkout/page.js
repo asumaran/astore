@@ -6,6 +6,7 @@ import CartBlock from '@/components/CartBlock';
 import Navigation from '@/components/Navigation';
 import Debug from '@/components/Debug';
 import { useRouter } from 'next/navigation';
+import { cartHasItems } from '@/utils';
 
 async function doCheckout() {
   let cartToken = localStorage.getItem('cartToken');
@@ -85,10 +86,14 @@ export default function Checkout() {
       <h1>Checkout Page</h1>
       <CartBlock cart={cart} />
       <hr />
-      <p>
-        <button onClick={onCheckoutClickHandler}>Checkout</button>
-      </p>
-      <hr />
+      {cartHasItems(cart) && (
+        <>
+          <p>
+            <button onClick={onCheckoutClickHandler}>Checkout</button>
+          </p>
+          <hr />
+        </>
+      )}
       <Debug />
     </div>
   );
