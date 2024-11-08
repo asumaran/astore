@@ -12,13 +12,7 @@ async function getOrderDetails(orderId, orderKey, email) {
     'https://wcpay.test/wp-json/wc/store/v1/order/' +
       orderId +
       '?' +
-      urlParams.toString(),
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
+      urlParams.toString()
   );
 
   return await response.json();
