@@ -4,13 +4,6 @@ import { AppContext } from '@/app/app-provider';
 import { useContext, useEffect, useState } from 'react';
 
 async function getOrderDetails(orderId, orderKey, email) {
-  let cartToken = localStorage.getItem('cartToken');
-
-  if (!cartToken) {
-    console.error('No Cart Token found');
-    return;
-  }
-
   const urlParams = new URLSearchParams();
   urlParams.append('key', orderKey);
   urlParams.append('billing_email', email);
@@ -24,7 +17,6 @@ async function getOrderDetails(orderId, orderKey, email) {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Cart-Token': cartToken,
       },
     }
   );
