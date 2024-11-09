@@ -19,14 +19,16 @@ async function doCheckout(formData) {
   const checkoutData = {
     billing_address: {
       email: formData.get('email'),
-      first_name: 'Peter',
-      last_name: 'Venkman',
-      address_1: '550 Central Park West',
-      city: 'New York',
-      state: 'NY',
-      postcode: '10023',
-      country: 'US',
+      first_name: formData.get('shipping-first-name'),
+      last_name: formData.get('shipping-last-name'),
+      address_1: formData.get('shipping-address-1'),
+      address_2: formData.get('shipping-address-2'),
+      city: formData.get('shipping-city'),
+      state: formData.get('shipping-state'),
+      postcode: formData.get('shipping-postcode'),
+      country: formData.get('shipping-country'),
     },
+    // TODO: Get this value from the checkout page.
     payment_method: 'cod',
   };
 
