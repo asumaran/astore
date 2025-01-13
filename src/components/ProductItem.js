@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import styles from '../app/page.module.scss';
 import Currency from '@/components/Currency';
 
@@ -12,7 +13,20 @@ export default function ProductItem({ product, addProductToCart }) {
       <div className={styles.details}>
         <div className={styles.content}>
           <div>
-            <img alt='Product Image' width='100' src={product.images[0]?.src} />
+            {product.images[0]?.src ? (
+              <img
+                alt='Product Image'
+                width='100'
+                src={product.images[0]?.src}
+              />
+            ) : (
+              <Image
+                src='/product-placeholder.png'
+                alt='Product image'
+                width={100}
+                height={100}
+              />
+            )}
           </div>
           <div className={styles.name}>{product.name}</div>
           <div className={styles.price}>
