@@ -1,25 +1,9 @@
 'use client';
 
+import { getCart } from '@/lib/api';
 import { createContext, useEffect, useState } from 'react';
 
 export const AppContext = createContext(null);
-
-export async function getCart(cartToken) {
-  const headers = {};
-
-  if (cartToken) {
-    headers['Cart-Token'] = cartToken;
-  }
-
-  const response = await fetch('https://wcpay.test/wp-json/wc/store/v1/cart', {
-    headers,
-  });
-
-  const cartTokenFromResponse = response.headers.get('Cart-Token');
-  const cart = await response.json();
-
-  return { cart, cartToken: cartTokenFromResponse };
-}
 
 export default function AppProvider({ children }) {
   const [cart, setCart] = useState(null);

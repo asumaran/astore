@@ -1,10 +1,13 @@
 import Image from 'next/image';
 import styles from '../app/page.module.scss';
 import Currency from '@/components/Currency';
+import useAddProductToCart from '@/hooks/useAddProductToCart';
 
-export default function ProductItem({ product, addProductToCart }) {
-  function handleClick() {
-    addProductToCart(product.id);
+export default function ProductItem({ product }) {
+  const { addProduct } = useAddProductToCart();
+
+  async function handleClick() {
+    await addProduct(product.id);
   }
 
   return (

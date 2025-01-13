@@ -17,36 +17,8 @@ async function getProducts() {
   return await response.json();
 }
 
-async function addProductToCart(productId) {
-  let storedCartToken = localStorage.getItem('cartToken');
-
-  if (!storedCartToken) {
-    const { cartToken } = await getCart();
-    // store Cart Token
-    storedCartToken = cartToken;
-    localStorage.setItem('cartToken', cartToken);
-  }
-
-  const response = await fetch(
-    'https://wcpay.test/wp-json/wc/store/v1/cart/add-item',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cart-Token': storedCartToken,
-      },
-      body: JSON.stringify({ id: productId, quantity: 1 }),
-    }
-  );
-
-  const cartTokenFromResponse = response.headers.get('Cart-Token');
-  const cart = await response.json();
-
-  return { cart, cartToken: cartTokenFromResponse };
-}
-
 export default function Home() {
-  const { cart, setCart, cartToken, setCartToken } = useContext(AppContext);
+  const { cart } = useContext(AppContext);
   const [products, setProducts] = useState([]);
   const router = useRouter();
 
@@ -56,17 +28,6 @@ export default function Home() {
       setProducts(data);
     })();
   }, []);
-
-  async function addProductToCartHandler(productId) {
-    const { cart, cartToken: cartTokenFromResponse } = await addProductToCart(
-      productId,
-      cartToken
-    );
-
-    // Update cart and Cart Token
-    setCart(cart);
-    setCartToken(cartTokenFromResponse);
-  }
 
   function goToCheckoutClickHandler() {
     router.push('/checkout');
@@ -82,10 +43,7 @@ export default function Home() {
           .map((product) => {
             return (
               <li key={product.id}>
-                <ProductItem
-                  product={product}
-                  addProductToCart={addProductToCartHandler}
-                />
+                <ProductItem product={product} />
               </li>
             );
           })}
